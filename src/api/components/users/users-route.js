@@ -18,7 +18,7 @@ module.exports = (app) => {
     '/',
     authenticationMiddleware,
     celebrate(usersValidator.createUser),
-    usersControllers.createUser
+    usersControllers.createUser // Perbaiki ini, mengarahkan ke fungsi createUser dari controller
   );
 
   // Get user detail

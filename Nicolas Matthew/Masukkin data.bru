@@ -1,0 +1,25 @@
+meta {
+  name: Masukkin data
+  type: http
+  seq: 4
+}
+
+post {
+  url: http://localhost:5000/api/users
+  body: json
+  auth: none
+}
+
+headers {
+  Authorization: JWT eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJlbWFpbCI6ImFkbWluQGV4YW1wbGUuY29tIiwidXNlcklkIjoiNjYyOWZjNTgzNTQ4NmU2NTBiMGU3ZGFiIiwiaWF0IjoxNzE0MTIwNzU4LCJleHAiOjE3MTQyMDcxNTh9.MSlcg4uwqFmplxfhetgJJKF9wbbF35i_leuIqUilVB4
+}
+
+body:json {
+  {
+    "name": "Randy",
+    "email": "Randy@example.com",
+    "password": "Randyy#456",
+    "password_confirm": "Randyy#456"
+  }
+  
+}

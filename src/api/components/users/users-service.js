@@ -5,21 +5,85 @@ const { hashPassword, passwordMatched } = require('../../../utils/password');
  * Get list of users
  * @returns {Array}
  */
-async function getUsers() {
+
+async function getUsers(page, limit, sortBy, searchTerm) {
+  // Fetch users
   const users = await usersRepository.getUsers();
 
-  const results = [];
-  for (let i = 0; i < users.length; i += 1) {
-    const user = users[i];
-    results.push({
-      id: user.id,
-      name: user.name,
-      email: user.email,
+  // Search logic
+  let filteredUsers = users.filter(user => {
+    if (searchTerm) {
+      const [field, term] = searchTerm.split(':');
+      // Check if the search field exists on the user object
+      if (field == 'email') {
+        return user.email.includes(term);
+      }
+      if (field == 'name') {
+        return user.name.includes(term);
+      }
+      // Ignore search if field doesn't exist
+      return true;
+    }
+    return true; // No search term, return all users
+  });
+
+  // Sort logic
+  if (sortBy) {
+    const [field, direction] = sortBy.split(':');
+    filteredUsers = filteredUsers.sort((a, b) => {
+      if (field == 'email') {
+        if (direction == 'asc') {
+          return a.email.localeCompare(b.email);
+        } else {
+          return b.email.localeCompare(a.email);
+        }
+      }
+      if (field == 'name') {
+        if (direction == 'asc') {
+          return a.name.localeCompare(b.name);
+        } else {
+          return b.name.localeCompare(a.name);
+        }
+      }
+      // Ignore sort if field doesn't exist
+      return 0;
     });
   }
 
-  return results;
+  // Pagination logic
+  const startIndex = (page - 1) * limit;
+  const endIndex = page * limit;
+  const paginatedUsers = filteredUsers.slice(startIndex, endIndex);
+
+  // Data formatting
+  const results = paginatedUsers.map((user) => ({
+    id: user.id,
+    name: user.name,
+    email: user.email,
+  }));
+
+  // Pagination info
+  const totalUsers = filteredUsers.length; // Update to use filtered users for accurate count
+  const totalPages = Math.ceil(totalUsers / limit);
+  const hasPreviousPage = page > 1;
+  const hasNextPage = page < totalPages;
+
+  const paginationInfo = {
+    page_number: page,
+    page_size: limit,
+    count: paginatedUsers.length,
+    total_pages: totalPages,
+    has_previous_page: hasPreviousPage,
+    has_next_page: hasNextPage,
+    data: results,
+  };
+
+  return paginationInfo;
 }
+
+
+
+
 
 /**
  * Get user detail
