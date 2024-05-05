@@ -5,7 +5,7 @@ meta {
 }
 
 get {
-  url: http://localhost:5000/api/users?page_number=1&page_size=10&search=email:admin&sort=email:asc
+  url: http://localhost:5000/api/users?page_number=1&page_size=10&search=email:a&sort=email:desc
   body: json
   auth: none
 }
@@ -13,8 +13,8 @@ get {
 query {
   page_number: 1
   page_size: 10
-  search: email:admin
-  sort: email:asc
+  search: email:a
+  sort: email:desc
 }
 
 headers {
