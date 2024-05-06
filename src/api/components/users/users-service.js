@@ -1,5 +1,6 @@
 const usersRepository = require('./users-repository');
 const { hashPassword, passwordMatched } = require('../../../utils/password');
+const { deskripsi, timestamp } = require('../../../models/transaksi-schema');
 
 /**
  * Get list of users
@@ -81,9 +82,27 @@ async function getUsers(page, limit, sortBy, searchTerm) {
   return paginationInfo;
 }
 
+/**
+ * Get list of tranaski
+ * @returns {Array}
+ */
+async function getTransaksi() {
+  const transaksi = await usersRepository.getTransaksi();
 
+  const results = [];
+  for (let i = 0; i < transaksi.length; i += 1) {
+    const Transaksi = transaksi[i];
+    results.push({
+      id: Transaksi.id,
+      deskripsi: Transaksi.deskripsi,
+      fromUser : Transaksi.fromUser,
+      timestamp : Transaksi.timestamp,
+      jumlah: Transaksi.jumlah,
+    });
+  }
 
-
+  return results;
+}
 
 /**
  * Get user detail
@@ -118,6 +137,49 @@ async function createUser(name, email, password) {
 
   try {
     await usersRepository.createUser(name, email, hashedPassword);
+  } catch (err) {
+    return null;
+  }
+
+  return true;
+}
+
+/**
+ * Create new transaksi
+ * @param {string} deskripsi - Name
+ * @param {string} fromUser - ID user
+ * @param {string} jumlah - jumlah
+ * @returns {boolean}
+ */
+async function createTransaksi(deskripsi, fromUser, jumlah) {
+  try {
+    const timestamp = Date.now();
+    const newTransaksi = await usersRepository.createTransaksi(deskripsi, fromUser, timestamp, jumlah);
+    await newTransaksi.save();
+  } catch (err) {
+    return null;
+  }
+
+  return true;
+}
+
+/**
+ * Update existing user
+ * @param {string} id - User ID
+ * @param {string} name - Name
+ * @param {string} email - Email
+ * @returns {boolean}
+ */
+async function updateTransaksi(id, deskripsi, jumlah) {
+  const transaksi = await usersRepository.getTransaksiId(id);
+
+  // User not found
+  if (!transaksi) {
+    return null;
+  }
+
+  try {
+    await usersRepository.updateTransaksi(id, deskripsi, jumlah);
   } catch (err) {
     return null;
   }
@@ -164,6 +226,28 @@ async function deleteUser(id) {
 
   try {
     await usersRepository.deleteUser(id);
+  } catch (err) {
+    return null;
+  }
+
+  return true;
+}
+
+/**
+ * Delete user
+ * @param {string} id - User ID
+ * @returns {boolean}
+ */
+async function deleteTransaksi(id) {
+  const transaksi = await usersRepository.getTransaksiId(id);
+
+  // User not found
+  if (!transaksi) {
+    return null;
+  }
+
+  try {
+    await usersRepository.deleteTransaksi(id);
   } catch (err) {
     return null;
   }
@@ -228,9 +312,13 @@ async function changePassword(userId, password) {
 module.exports = {
   getUsers,
   getUser,
+  getTransaksi,
   createUser,
+  createTransaksi,
   updateUser,
+  updateTransaksi,
   deleteUser,
+  deleteTransaksi,
   emailIsRegistered,
   checkPassword,
   changePassword,

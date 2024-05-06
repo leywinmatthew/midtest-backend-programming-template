@@ -23,10 +23,24 @@ module.exports = {
     },
   },
 
+  createTransaksi: {
+    body: {
+      deskripsi: joi.string().required().label('Deskripsi'),
+      jumlah: joi.number().required().label('jumlah'),
+    },
+  },
+
   updateUser: {
     body: {
       name: joi.string().min(1).max(100).required().label('Name'),
       email: joi.string().email().required().label('Email'),
+    },
+  },
+
+  updateTransaksi: {
+    body: {
+      deskripsi: joi.string().required().label('Deskripsi'),
+      jumlah: joi.number().required().label('jumlah'),
     },
   },
 

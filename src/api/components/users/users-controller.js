@@ -24,6 +24,22 @@ async function getUsers(request, response, next) {
 }
 
 /**
+ * Handle get list of users request
+ * @param {object} request - Express request object
+ * @param {object} response - Express response object
+ * @param {object} next - Express route middlewares
+ * @returns {object} Response object or pass an error to the next route
+ */
+async function getTransaksi(request, response, next) {
+  try {
+    const transaksi = await usersService.getTransaksi();
+    return response.status(200).json(transaksi);
+  } catch (error) {
+    return next(error);
+  }
+}
+
+/**
  * Handle get user detail request
  * @param {object} request - Express request object
  * @param {object} response - Express response object
@@ -90,6 +106,33 @@ async function createUser(request, response, next) {
 }
 
 /**
+ * Handle create user request
+ * @param {object} request - Express request object
+ * @param {object} response - Express response object
+ * @param {object} next - Express route middlewares
+ * @returns {object} Response object or pass an error to the next route
+ */
+async function createTransaksi(request, response, next) {
+  try {
+    const deskripsi = request.body.deskripsi;
+    const id = request.params.id;
+    const jumlah = request.body.jumlah;
+
+    const transaksi = await usersService.createTransaksi(deskripsi, id, jumlah);
+    if (transaksi) {
+      throw errorResponder(
+        errorTypes.UNPROCESSABLE_ENTITY,
+        'Failed to create transaksi'
+      );
+    }
+
+    return response.status(200).json({ id, jumlah });
+  } catch (error) {
+    return next(error);
+  }
+}
+
+/**
  * Handle update user request
  * @param {object} request - Express request object
  * @param {object} response - Express response object
@@ -126,6 +169,33 @@ async function updateUser(request, response, next) {
 }
 
 /**
+ * Handle update user request
+ * @param {object} request - Express request object
+ * @param {object} response - Express response object
+ * @param {object} next - Express route middlewares
+ * @returns {object} Response object or pass an error to the next route
+ */
+async function updateTransaksi(request, response, next) {
+  try {
+    const id = request.params.id;
+    const deskripsi = request.body.deskripsi;
+    const jumlah = request.body.jumlah;
+
+    const success = await usersService.updateTransaksi(id, deskripsi, jumlah);
+    if (success) {
+      throw errorResponder(
+        errorTypes.UNPROCESSABLE_ENTITY,
+        'Failed to update user'
+      );
+    }
+
+    return response.status(200).json({ id });
+  } catch (error) {
+    return next(error);
+  }
+}
+
+/**
  * Handle delete user request
  * @param {object} request - Express request object
  * @param {object} response - Express response object
@@ -141,6 +211,31 @@ async function deleteUser(request, response, next) {
       throw errorResponder(
         errorTypes.UNPROCESSABLE_ENTITY,
         'Failed to delete user'
+      );
+    }
+
+    return response.status(200).json({ id });
+  } catch (error) {
+    return next(error);
+  }
+}
+
+/**
+ * Handle delete user request
+ * @param {object} request - Express request object
+ * @param {object} response - Express response object
+ * @param {object} next - Express route middlewares
+ * @returns {object} Response object or pass an error to the next route
+ */
+async function deleteTransaksi(request, response, next) {
+  try {
+    const id = request.params.id;
+
+    const success = await usersService.deleteTransaksi(id);
+    if (success) {
+      throw errorResponder(
+        errorTypes.UNPROCESSABLE_ENTITY,
+        'Failed to delete transaksi'
       );
     }
 
@@ -198,8 +293,12 @@ async function changePassword(request, response, next) {
 module.exports = {
   getUsers,
   getUser,
+  getTransaksi,
   createUser,
+  createTransaksi,
   updateUser,
+  updateTransaksi,
   deleteUser,
+  deleteTransaksi,
   changePassword,
 };

@@ -1,22 +1,22 @@
 meta {
-  name: getusers
+  name: Create Transaksi
   type: http
-  seq: 2
+  seq: 6
 }
 
-get {
-  url: http://localhost:5000/api/users?page_number=1&page_size=10&search=email:a&sort=email:desc
+post {
+  url: http://localhost:5000/api/users/transaksi/662b69e86afd4450bebab26d
   body: json
   auth: none
 }
 
-query {
-  page_number: 1
-  page_size: 10
-  search: email:a
-  sort: email:desc
-}
-
 headers {
   Authorization: JWT eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJlbWFpbCI6ImFkbWluQGV4YW1wbGUuY29tIiwidXNlcklkIjoiNjYyOWZjNTgzNTQ4NmU2NTBiMGU3ZGFiIiwiaWF0IjoxNzE0OTcwNzAzLCJleHAiOjE3MTUwNTcxMDN9.-0LxPKygz750l2hCwt5ZW9RGK0d91YuJBpJ4t3761uc
+}
+
+body:json {
+  {
+    "deskripsi":"bayar transfer",
+    "jumlah": 120000
+  }
 }

@@ -13,12 +13,23 @@ module.exports = (app) => {
   // Get list of users
   route.get('/', authenticationMiddleware, usersControllers.getUsers);
 
+  // Get list of transaksi
+  route.get('/transaksi', authenticationMiddleware, usersControllers.getTransaksi);
+
   // Create user
   route.post(
     '/',
     authenticationMiddleware,
     celebrate(usersValidator.createUser),
     usersControllers.createUser // Perbaiki ini, mengarahkan ke fungsi createUser dari controller
+  );
+
+  // Create transaksi
+  route.post(
+    '/transaksi/:id',
+    authenticationMiddleware,
+    celebrate(usersValidator.createTransaksi),
+    usersControllers.createTransaksi // Perbaiki ini, mengarahkan ke fungsi createUser dari controller
   );
 
   // Get user detail
@@ -32,8 +43,19 @@ module.exports = (app) => {
     usersControllers.updateUser
   );
 
+  // Update transaksi
+  route.put(
+    '/transaksi/:id',
+    authenticationMiddleware,
+    celebrate(usersValidator.updateTransaksi),
+    usersControllers.updateTransaksi
+  );
+
   // Delete user
   route.delete('/:id', authenticationMiddleware, usersControllers.deleteUser);
+
+  // Delete user
+  route.delete('/transaksi/:id', authenticationMiddleware, usersControllers.deleteTransaksi);
 
   // Change password
   route.post(
